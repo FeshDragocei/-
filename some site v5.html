@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Студенческий портал</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+        .grade-excellent {
+            background-color: #4CAF50;
+        }
+        .grade-good {
+            background-color: #8BC34A;
+        }
+        .grade-satisfactory {
+            background-color: #FFC107;
+        }
+        .grade-unsatisfactory {
+            background-color: #F44336;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Мобильное меню -->
+        <div class="md:hidden fixed top-4 left-4 z-50">
+            <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Боковая панель -->
+        <div id="sidebar" class="sidebar bg-gray-800 text-white w-64 space-y-6 py-7 px-2 fixed md:relative inset-y-0 left-0 transform -translate-x-full md:translate-x-0 z-40">
+            <div class="flex items-center space-x-2 px-4">
+                <i class="fas fa-graduation-cap text-2xl text-blue-300"></i>
+                <h1 class="text-xl font-bold">Студенческий портал</h1>
+            </div>
+            <nav>
+                <div class="px-4 py-2 text-gray-400 uppercase text-xs font-bold tracking-wider">
+                    Основное
+                </div>
+                <a href="javascript:void(0)" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white bg-gray-700 text-white">
+                    <i class="fas fa-user-graduate mr-3"></i>Профиль
+                </a>
+                <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white schedule-link">
+                    <i class="fas fa-calendar-alt mr-3"></i>Расписание
+                </a>
+                <a href="#grades" id="grades-link" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
+                    <i class="fas fa-check-circle mr-3"></i>Оценки
+                </a>
+                <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white reminders-link">
+                    <i class="fas fa-bell mr-3"></i>Напоминания
+                </a>
+            </nav>
+            <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700">
+                <div class="flex items-center space-x-2">
+                    <img src="https://via.placeholder.com/40" alt="User" class="rounded-full">
+                    <div>
+                        <p class="font-medium">Иванов И.И.</p>
+                        <p class="text-xs text-gray-400">Студент группы ПИ-19-1</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Основное содержимое -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Шапка -->
+            <header class="bg-white shadow-sm sticky top-0 z-30">
+                <div class="flex justify-between items-center py-3 sm:py-4 px-4 sm:px-6">
+                    <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Личный кабинет</h2>
+                    <div class="flex items-center space-x-2 sm:space-x-4">
+                        <div class="relative">
+                            <button class="text-gray-600 focus:outline-none">
+                                <i class="fas fa-bell text-xl"></i>
+                                <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <button class="text-gray-600 focus:outline-none">
+                                <i class="fas fa-envelope text-xl"></i>
+                                <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-blue-500"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Контент -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Приветствие -->
+                <div class="bg-white rounded-lg shadow p-4 sm:p-6 mb-6">
+                    <div class="flex flex-col sm:flex-row items-start">
+                        <img src="https://via.placeholder.com/80" alt="User" class="rounded-full mb-4 sm:mb-0 sm:mr-4 w-16 h-16 sm:w-20 sm:h-20">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-1">Иванов Иван Иванович</h3>
+                            <p class="text-gray-600 mb-2">Студент группы ПИ-19-1</p>
+                            <div class="flex flex-wrap gap-2 text-sm">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">Курс: 3</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded">Форма: Очная</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded">Факультет: ИТ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <p class="text-gray-600">Сегодня <span id="current-date" class="font-medium"></span>. У вас запланировано 3 занятия.</p>
+                    </div>
+                </div>
+
+                <!-- Основные разделы -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+                    <!-- Расписание -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="bg-gray-800 text-white px-4 py-3">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-semibold"><i class="fas fa-calendar-alt mr-2"></i>Расписание</h3>
+                                <a href="#" class="text-sm text-blue-300 hover:underline">Все</a>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-gray-500 mb-2">Сегодня, <span id="today-date"></span></h4>
+                                <div class="space-y-3">
+                                    <div class="border-l-4 border-blue-500 pl-3 py-1">
+                                        <p class="font-medium">Математический анализ</p>
+                                        <p class="text-sm text-gray-600">09:00 - 10:30, ауд. 302</p>
+                                    </div>
+                                    <div class="border-l-4 border-green-500 pl-3 py-1">
+                                        <p class="font-medium">Программирование</p>
+                                        <p class="text-sm text-gray-600">11:00 - 12:30, ауд. 415</p>
+                                    </div>
+                                    <div class="border-l-4 border-purple-500 pl-3 py-1">
+                                        <p class="font-medium">Иностранный язык</p>
+                                        <p class="text-sm text-gray-600">14:00 - 15:30, ауд. 203</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-500 mb-2">Завтра</h4>
+                                <div class="border-l-4 border-yellow-500 pl-3 py-1">
+                                    <p class="font-medium">Физика</p>
+                                    <p class="text-sm text-gray-600">10:00 - 11:30, ауд. 401</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Оценки -->
+                    <div id="grades-section" class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="bg-gray-800 text-white px-4 py-3">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-semibold"><i class="fas fa-check-circle mr-2"></i>Оценки</h3>
+                                <div>
+                                    <button id="add-subject-btn" class="text-sm text-blue-300 hover:underline mr-3">Добавить предмет</button>
+                                    <button id="view-all-grades" class="text-sm text-blue-300 hover:underline">Все</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="overflow-x-auto -mx-4 sm:mx-0">
+                                <table class="min-w-full text-sm sm:text-base" id="grades-table">
+                                    <thead>
+                                        <tr class="text-left text-xs text-gray-500 uppercase border-b">
+                                            <th class="py-2">Дисциплина</th>
+                                            <th class="py-2">Оценка</th>
+                                            <th class="py-2">Дата</th>
+                                            <th class="py-2">Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="grades-body">
+                                        <!-- Оценки будут загружены сюда -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-4">
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="font-medium">Средний балл:</span>
+                                    <span id="average-grade" class="bg-blue-100 text-blue-800 px-2 py-1 rounded">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Напоминания -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="bg-gray-800 text-white px-4 py-3">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-semibold"><i class="fas fa-bell mr-2"></i>Напоминания</h3>
+                                <a href="#" class="text-sm text-blue-300 hover:underline">Все</a>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div id="reminders-container" class="space-y-4">
+                                <!-- Напоминания будут добавляться сюда динамически -->
+                            </div>
+                            <button id="add-reminder-button" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-200">
+                                <i class="fas fa-plus mr-2"></i>Добавить напоминание
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Дополнительная информация -->
+                <div class="grid grid-cols-1">
+                    <!-- Это место намеренно оставлено пустым -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Модальное окно для добавления напоминания -->
+    <div id="add-reminder-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-2 sm:mx-0">
+            <div class="bg-gray-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
+                <h3 class="text-xl font-semibold"><i class="fas fa-bell mr-2"></i>Добавить напоминание</h3>
+                <button id="close-add-reminder-modal" class="text-white hover:text-gray-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <form id="reminder-form">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="reminder-title">Название</label>
+                        <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="reminder-title" type="text" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="reminder-description">Описание</label>
+                        <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="reminder-description" type="text">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="reminder-date">Дата напоминания</label>
+                        <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="reminder-date" type="date" required>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded transition duration-200">
+                            Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для всех напоминаний -->
+    <div id="all-reminders-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="bg-gray-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
+                <h3 class="text-xl font-semibold"><i class="fas fa-bell mr-2"></i>Все напоминания</h3>
+                <button id="close-all-reminders-modal" class="text-white hover:text-gray-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div id="all-reminders-container" class="space-y-4">
+                    <!-- Напоминания будут загружены здесь -->
+                </div>
+            </div>
+            <div class="bg-gray-100 px-6 py-4 rounded-b-lg flex justify-end">
+                <button id="add-new-reminder-from-modal" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded transition duration-200">
+                    <i class="fas fa-plus mr-2"></i>Добавить новое
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для добавления темы -->
+    <div id="add-subject-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="bg-gray-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
+                <h3 class="text-xl font-semibold"><i class="fas fa-plus-circle mr-2"></i>Добавить предмет</h3>
+                <button id="close-add-subject-modal" class="text-white hover:text-gray-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <form id="add-subject-form">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="subject-name">Название предмета</label>
+                        <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               id="subject-name" type="text" required>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" id="cancel-add-subject" class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded transition duration-200">
+                            Отмена
+                        </button>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded transition duration-200">
+                            Добавить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для добавления оценки -->
+    <div id="add-grade-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="bg-gray-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
+                <h3 class="text-xl font-semibold"><i class="fas fa-plus-circle mr-2"></i>Добавить оценку</h3>
+                <button id="close-add-grade-modal" class="text-white hover:text-gray-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <form id="add-grade-form">
+                    <input type="hidden" id="grade-subject-id">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="grade-value">Оценка</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                id="grade-value" required>
+                            <option value="">Выберите оценку</option>
+                            <option value="5">5 (Отлично)</option>
+                            <option value="4">4 (Хорошо)</option>
+                            <option value="3">3 (Удовлетворительно)</option>
+                            <option value="2">2 (Неудовлетворительно)</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2" for="grade-date">Дата</label>
+                        <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               id="grade-date" type="date" required>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" id="cancel-add-grade" class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded transition duration-200">
+                            Отмена
+                        </button>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded transition duration-200">
+                            Добавить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальный для всех классов -->
+    <div id="all-grades-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div class="bg-gray-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
+                <h3 class="text-xl font-semibold"><i class="fas fa-check-circle mr-2"></i>Все оценки</h3>
+                <button id="close-all-grades-modal" class="text-white hover:text-gray-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="py-3 px-4 text-left text-gray-700 font-medium">Дисциплина</th>
+                                <th class="py-3 px-4 text-left text-gray-700 font-medium">Оценки</th>
+                                <th class="py-3 px-4 text-left text-gray-700 font-medium">Средний балл</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all-grades-body">
+                            <!-- Оценки будут загружены сюда -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bg-gray-100 px-6 py-4 rounded-b-lg flex justify-between items-center">
+                <div class="text-sm font-medium">
+                    Общий средний балл: <span id="overall-average" class="bg-blue-100 text-blue-800 px-2 py-1 rounded">0</span>
+                </div>
+                <button id="add-new-subject-from-modal" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-200">
+                    <i class="fas fa-plus mr-2"></i>Добавить предмет
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для редактирования расписания -->
+    <div id="edit-schedule-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div class="bg-gray-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
+                <h3 class="text-xl font-semibold"><i class="fas fa-edit mr-2"></i>Редактировать расписание</h3>
+                <button id="close-edit-schedule-modal" class="text-white hover:text-gray-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <form id="edit-schedule-form">
+                    <div class="mb-6">
+                        <h4 class="text-lg font-medium text-gray-800 mb-4">Добавить занятие</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-medium mb-2" for="schedule-day">День недели</label>
+                                <select class="w-full px-3 py-2 border border-gray-300 rounded-md" id="schedule-day" required>
+                                    <option value="">Выберите день</option>
+                                    <option value="Понедельник">Понедельник</option>
+                                    <option value="Вторник">Вторник</option>
+                                    <option value="Среда">Среда</option>
+                                    <option value="Четверг">Четверг</option>
+                                    <option value="Пятница">Пятница</option>
+                                    <option value="Суббота">Суббота</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-medium mb-2" for="schedule-time">Время</label>
+                                <input class="w-full px-3 py-2 border border-gray-300 rounded-md" id="schedule-time" type="text" placeholder="09:00 - 10:30" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-medium mb-2" for="schedule-subject">Дисциплина</label>
+                                <input class="w-full px-3 py-2 border border-gray-300 rounded-md" id="schedule-subject" type="text" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-medium mb-2" for="schedule-teacher">Преподаватель</label>
+                                <input class="w-full px-3 py-2 border border-gray-300 rounded-md" id="schedule-teacher" type="text">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-medium mb-2" for="schedule-room">Аудитория</label>
+                                <input class="w-full px-3 py-2 border border-gray-300 rounded-md" id="schedule-room" type="text">
+                            </div>
+                        </div>
+                        <div class="mt-4 flex justify-end">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded">
+                                Добавить занятие
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Full Schedule -->
+    <div id="schedule-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div class="bg-gray-800 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
+                <h3 class="text-xl font-semibold"><i class="fas fa-calendar-alt mr-2"></i>Полное расписание</h3>
+                <button id="close-schedule-modal" class="text-white hover:text-gray-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="mb-8">
+                    <h4 class="text-lg font-medium text-gray-800 mb-4">Текущая неделя</h4>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="py-3 px-4 text-left text-gray-700 font-medium">День</th>
+                                    <th class="py-3 px-4 text-left text-gray-700 font-medium">Время</th>
+                                    <th class="py-3 px-4 text-left text-gray-700 font-medium">Дисциплина</th>
+                                    <th class="py-3 px-4 text-left text-gray-700 font-medium">Преподаватель</th>
+                                    <th class="py-3 px-4 text-left text-gray-700 font-medium">Аудитория</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                    <td class="py-3 px-4">Понедельник</td>
+                                    <td class="py-3 px-4">09:00 - 10:30</td>
+                                    <td class="py-3 px-4">Математический анализ</td>
+                                    <td class="py-3 px-4">Иванова А.П.</td>
+                                    <td class="py-3 px-4">302</td>
+                                </tr>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                    <td class="py-3 px-4">Понедельник</td>
+                                    <td class="py-3 px-4">11:00 - 12:30</td>
+                                    <td class="py-3 px-4">Программирование</td>
+                                    <td class="py-3 px-4">Петров С.М.</td>
+                                    <td class="py-3 px-4">415</td>
+                                </tr>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                    <td class="py-3 px-4">Вторник</td>
+                                    <td class="py-3 px-4">10:00 - 11:30</td>
+                                    <td class="py-3 px-4">Физика</td>
+                                    <td class="py-3 px-4">Сидоров В.А.</td>
+                                    <td class="py-3 px-4">401</td>
+                                </tr>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                    <td class="py-3 px-4">Среда</td>
+                                    <td class="py-3 px-4">14:00 - 15:30</td>
+                                    <td class="py-3 px-4">Иностранный язык</td>
+                                    <td class="py-3 px-4">Кузнецова Е.В.</td>
+                                    <td class="py-3 px-4">203</td>
+                                </tr>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                    <td class="py-3 px-4">Четверг</td>
+                                    <td class="py-3 px-4">13:00 - 14:30</td>
+                                    <td class="py-3 px-4">Дискретная математика</td>
+                                    <td class="py-3 px-4">Смирнов А.Б.</td>
+                                    <td class="py-3 px-4">310</td>
+                                </tr>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                    <td class="py-3 px-4">Пятница</td>
+                                    <td class="py-3 px-4">09:00 - 10:30</td>
+                                    <td class="py-3 px-4">История</td>
+                                    <td class="py-3 px-4">Федорова Л.К.</td>
+                                    <td class="py-3 px-4">105</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-medium text-gray-800 mb-4">Следующая неделя</h4>
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
+                        <p class="text-blue-800">Расписание на следующую неделю будет доступно в пятницу</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-100 px-6 py-4 rounded-b-lg flex justify-between">
+                <button id="edit-schedule-button" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded transition duration-200">
+                    <i class="fas fa-edit mr-2"></i>Редактировать
+                </button>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded transition duration-200">
+                    <i class="fas fa-print mr-2"></i>Распечатать
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JSON функции для работы с localStorage
+        function saveToStorage(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function loadFromStorage(key) {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : null;
+        }
+
+        // Инициализация хранилища если пустое
+        function initStorage() {
+            if (!loadFromStorage('grades')) {
+                saveToStorage('grades', []);
+            }
+            if (!loadFromStorage('reminders')) {
+                saveToStorage('reminders', []);
+            }
+            if (!loadFromStorage('schedule')) {
+                saveToStorage('schedule', {
+                    currentWeek: [],
+                    nextWeek: []
+                });
+            }
+        }
+
+        // Установка текущей даты
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = now.toLocaleDateString('ru-RU', options);
+        
+        // Установка даты для сегодняшнего расписания
+        const todayOptions = { day: 'numeric', month: 'long' };
+        document.getElementById('today-date').textContent = now.toLocaleDateString('ru-RU', todayOptions);
+
+        // Модальная функциональность расписания
+        const scheduleLink = document.querySelector('a.schedule-link');
+        const editScheduleModal = document.getElementById('edit-schedule-modal');
+        const closeEditScheduleModal = document.getElementById('close-edit-schedule-modal');
+        const editScheduleForm = document.getElementById('edit-schedule-form');
+        const scheduleModal = document.getElementById('schedule-modal');
+        const closeScheduleModal = document.getElementById('close-schedule-modal');
+
+        scheduleLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            scheduleModal.classList.remove('hidden');
+        });
+
+        closeScheduleModal.addEventListener('click', () => {
+            scheduleModal.classList.add('hidden');
+        });
+
+        // Закрывайте модальные окна при щелчке за пределами
+        window.addEventListener('click', (e) => {
+            if (e.target === scheduleModal) {
+                scheduleModal.classList.add('hidden');
+            }
+            if (e.target === editScheduleModal) {
+                editScheduleModal.classList.add('hidden');
+            }
+            if (e.target === addReminderModal) {
+                addReminderModal.classList.add('hidden');
+            }
+        });
+
+        // Обработчик кнопки «Изменить расписание»
+        document.getElementById('edit-schedule-button').addEventListener('click', () => {
+            scheduleModal.classList.add('hidden');
+            editScheduleModal.classList.remove('hidden');
+        });
+
+        // Закрыть модальное окно редактирования расписания
+        closeEditScheduleModal.addEventListener('click', () => {
+            editScheduleModal.classList.add('hidden');
+        });
+
+        // Обработка отправки формы редактирования расписания
+        editScheduleForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const day = document.getElementById('schedule-day').value;
+            const time = document.getElementById('schedule-time').value;
+            const subject = document.getElementById('schedule-subject').value;
+            const teacher = document.getElementById('schedule-teacher').value;
+            const room = document.getElementById('schedule-room').value;
+            
+            // Добавляем новое занятие в таблицу
+            const tbody = document.querySelector('#schedule-modal tbody');
+            const row = document.createElement('tr');
+            row.className = 'border-b border-gray-200 hover:bg-gray-50';
+            row.innerHTML = `
+                <td class="py-3 px-4">${day}</td>
+                <td class="py-3 px-4">${time}</td>
+                <td class="py-3 px-4">${subject}</td>
+                <td class="py-3 px-4">${teacher}</td>
+                <td class="py-3 px-4">${room}</td>
+            `;
+            tbody.appendChild(row);
+            
+            // Сохраняем расписание
+            saveSchedule();
+            
+            alert('Занятие добавлено в расписание!');
+            editScheduleForm.reset();
+            editScheduleModal.classList.add('hidden');
+        });
+
+        // Функциональность напоминаний
+        const addReminderModal = document.getElementById('add-reminder-modal');
+        const closeAddReminderModal = document.getElementById('close-add-reminder-modal');
+        const addReminderButton = document.getElementById('add-reminder-button');
+        const reminderForm = document.getElementById('reminder-form');
+        const remindersContainer = document.getElementById('reminders-container');
+
+        // Примеры значков для различных типов напоминаний
+        const reminderIcons = {
+            'book': 'fa-book',
+            'file': 'fa-file-alt',
+            'payment': 'fa-exclamation',
+            'default': 'fa-bell'
+        };
+
+        // Образцы цветов для различных типов напоминаний
+        const reminderColors = {
+            'book': { bg: 'bg-blue-100', text: 'text-blue-800' },
+            'file': { bg: 'bg-yellow-100', text: 'text-yellow-800' },
+            'payment': { bg: 'bg-red-100', text: 'text-red-800' },
+            'default': { bg: 'bg-purple-100', text: 'text-purple-800' }
+        };
+
+        // Загрузить напоминания из хранилища
+        function loadReminders() {
+            const reminders = loadFromStorage('reminders') || [];
+            remindersContainer.innerHTML = '';
+            
+            reminders.forEach(reminder => {
+                const daysLeft = calculateDaysLeft(reminder.date);
+                const iconType = reminder.icon || 'default';
+                
+                const reminderElement = document.createElement('div');
+                reminderElement.className = 'flex items-start';
+                reminderElement.innerHTML = `
+                    <div class="${reminderColors[iconType].bg} ${reminderColors[iconType].text} rounded-full p-2 mr-3">
+                        <i class="fas ${reminderIcons[iconType]} text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium">${reminder.title}</p>
+                        <p class="text-sm text-gray-600">${reminder.description}</p>
+                        <p class="text-xs text-gray-500 mt-1">Срок до ${formatDate(reminder.date)} (Осталось ${daysLeft} ${getDayWord(daysLeft)})</p>
+                    </div>
+                `;
+                remindersContainer.appendChild(reminderElement);
+            });
+        }
+
+        // Вспомогательные функции
+        function calculateDaysLeft(dateString) {
+            const today = new Date();
+            const reminderDate = new Date(dateString);
+            const diffTime = reminderDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            return diffDays;
+        }
+
+        function getDayWord(days) {
+            if (days % 10 === 1 && days % 100 !== 11) return 'день';
+            if ([2, 3, 4].includes(days % 10) && ![12, 13, 14].includes(days % 100)) return 'дня';
+            return 'дней';
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU');
+        }
+
+        // Прослушиватели событий для модального напоминания
+        addReminderButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            addReminderModal.classList.remove('hidden');
+        });
+
+        closeAddReminderModal.addEventListener('click', () => {
+            addReminderModal.classList.add('hidden');
+        });
+
+        // Обработка отправки формы
+        reminderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('reminder-title').value;
+            const description = document.getElementById('reminder-description').value;
+            const date = document.getElementById('reminder-date').value;
+            
+            // Определить тип значка на основе названия
+            let icon = 'default';
+            if (title.toLowerCase().includes('лабораторная') || title.toLowerCase().includes('задание')) icon = 'book';
+            if (title.toLowerCase().includes('реферат') || title.toLowerCase().includes('доклад')) icon = 'file';
+            if (title.toLowerCase().includes('оплат')) icon = 'payment';
+            
+            // Сохранить напоминание
+            const reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+            reminders.push({ title, description, date, icon });
+            saveToStorage('reminders', reminders);
+            
+            // Сбросить форму и закрыть модальное окно
+            reminderForm.reset();
+            addReminderModal.classList.add('hidden');
+            
+            // Перезагрузить напоминания
+            loadReminders();
+        });
+
+        // Все напоминания Модальные функции
+        const remindersLink = document.querySelector('.reminders-link');
+        const allRemindersModal = document.getElementById('all-reminders-modal');
+        const closeAllRemindersModal = document.getElementById('close-all-reminders-modal');
+        const allRemindersContainer = document.getElementById('all-reminders-container');
+        const addNewReminderFromModal = document.getElementById('add-new-reminder-from-modal');
+
+        remindersLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showAllReminders();
+            allRemindersModal.classList.remove('hidden');
+        });
+
+        closeAllRemindersModal.addEventListener('click', () => {
+            allRemindersModal.classList.add('hidden');
+        });
+
+        addNewReminderFromModal.addEventListener('click', () => {
+            allRemindersModal.classList.add('hidden');
+            addReminderModal.classList.remove('hidden');
+        });
+
+        function showAllReminders() {
+            const reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+            allRemindersContainer.innerHTML = '';
+            
+            if (reminders.length === 0) {
+                allRemindersContainer.innerHTML = '<p class="text-gray-600 text-center py-4">У вас пока нет напоминаний</p>';
+                return;
+            }
+
+            reminders.forEach((reminder, index) => {
+                const daysLeft = calculateDaysLeft(reminder.date);
+                const iconType = reminder.icon || 'default';
+                
+                const reminderElement = document.createElement('div');
+                reminderElement.className = 'bg-white rounded-lg shadow p-4';
+                reminderElement.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="${reminderColors[iconType].bg} ${reminderColors[iconType].text} rounded-full p-3 mr-3">
+                            <i class="fas ${reminderIcons[iconType]}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-medium">${reminder.title}</h4>
+                                <button class="delete-reminder text-gray-400 hover:text-red-500" data-index="${index}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-1">${reminder.description || 'Нет описания'}</p>
+                            <p class="text-xs text-gray-500 mt-2">
+                                <i class="far fa-calendar-alt mr-1"></i>
+                                ${formatDate(reminder.date)} (Осталось ${daysLeft} ${getDayWord(daysLeft)})
+                            </p>
+                        </div>
+                    </div>
+                `;
+                allRemindersContainer.appendChild(reminderElement);
+            });
+
+            // Добавить "прослушиватели" событий для кнопок удаления
+            document.querySelectorAll('.delete-reminder').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    deleteReminder(index);
+                });
+            });
+        }
+
+        function deleteReminder(index) {
+            const reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+            reminders.splice(index, 1);
+            localStorage.setItem('reminders', JSON.stringify(reminders));
+            showAllReminders();
+            loadReminders(); // Обновить напоминания на главном экране
+        }
+
+        // Функциональность оценок
+        const grades = loadFromStorage('grades') || [];
+        const gradesBody = document.getElementById('grades-body');
+        const averageGradeElement = document.getElementById('average-grade');
+        const addSubjectBtn = document.getElementById('add-subject-btn');
+        const addSubjectModal = document.getElementById('add-subject-modal');
+        const closeAddSubjectModal = document.getElementById('close-add-subject-modal');
+        const cancelAddSubject = document.getElementById('cancel-add-subject');
+        const addSubjectForm = document.getElementById('add-subject-form');
+        const addGradeModal = document.getElementById('add-grade-modal');
+        const closeAddGradeModal = document.getElementById('close-add-grade-modal');
+        const cancelAddGrade = document.getElementById('cancel-add-grade');
+        const addGradeForm = document.getElementById('add-grade-form');
+        const viewAllGrades = document.getElementById('view-all-grades');
+
+        // Load grades on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadReminders();
+            loadGrades();
+        });
+
+        function loadGrades() {
+            gradesBody.innerHTML = '';
+            
+            if (grades.length === 0) {
+                gradesBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="py-4 text-center text-gray-500">Нет данных об оценках</td>
+                    </tr>
+                `;
+                averageGradeElement.textContent = '0';
+                return;
+            }
+
+            let total = 0;
+            let count = 0;
+
+            grades.forEach((subject, index) => {
+                // Добавить строку заголовка темы
+                const headerRow = document.createElement('tr');
+                headerRow.className = 'bg-gray-50';
+                headerRow.innerHTML = `
+                    <td colspan="4" class="py-2 px-4 font-medium">
+                        ${subject.name}
+                        <button class="float-right text-blue-500 hover:text-blue-700 add-grade-to-subject" 
+                                data-subject="${index}">
+                            <i class="fas fa-plus-circle"></i> Добавить оценку
+                        </button>
+                    </td>
+                `;
+                gradesBody.appendChild(headerRow);
+
+                // Добавить оценки по этому предмету
+                subject.grades.forEach((grade, gradeIndex) => {
+                    const gradeClass = getGradeClass(grade.value);
+                    
+                    const row = document.createElement('tr');
+                    row.className = 'border-b border-gray-100';
+                    row.innerHTML = `
+                        <td class="py-3 px-4"></td>
+                        <td class="py-3 px-4">
+                            <span class="${gradeClass} text-white px-2 py-1 rounded text-sm">${grade.value}</span>
+                        </td>
+                        <td class="py-3 px-4 text-sm text-gray-600">${grade.date}</td>
+                        <td class="py-3 px-4">
+                            <button class="text-red-400 hover:text-red-600 delete-grade" 
+                                    data-subject="${index}" data-grade="${gradeIndex}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    `;
+                    gradesBody.appendChild(row);
+                    
+                    total += parseInt(grade.value);
+                    count++;
+                });
+            });
+
+            // Рассчитать среднее
+            const average = count > 0 ? (total / count).toFixed(2) : 0;
+            averageGradeElement.textContent = average;
+
+            // Добавить "прослушиватели" событий для кнопок
+            document.querySelectorAll('.delete-grade').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const subjectIndex = parseInt(this.getAttribute('data-subject'));
+                    const gradeIndex = parseInt(this.getAttribute('data-grade'));
+                    deleteGrade(subjectIndex, gradeIndex);
+                });
+            });
+
+            document.querySelectorAll('.add-grade-to-subject').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const subjectIndex = parseInt(this.getAttribute('data-subject'));
+                    openAddGradeModal(subjectIndex);
+                });
+            });
+        }
+
+        function getGradeClass(grade) {
+            switch(grade) {
+                case '5': return 'grade-excellent';
+                case '4': return 'grade-good';
+                case '3': return 'grade-satisfactory';
+                default: return 'grade-unsatisfactory';
+            }
+        }
+
+        function openAddGradeModal(subjectIndex) {
+            document.getElementById('grade-subject-id').value = subjectIndex;
+            document.getElementById('grade-date').valueAsDate = new Date();
+            addGradeModal.classList.remove('hidden');
+        }
+
+        function deleteGrade(subjectIndex, gradeIndex) {
+            grades[subjectIndex].grades.splice(gradeIndex, 1);
+            
+            // Удалить предмет, если не осталось оценок
+            if (grades[subjectIndex].grades.length === 0) {
+                grades.splice(subjectIndex, 1);
+            }
+            
+            saveToStorage('grades', grades);
+            loadGrades();
+        }
+
+        // Модальные обработчики предметов
+        addSubjectBtn.addEventListener('click', () => {
+            addSubjectModal.classList.remove('hidden');
+        });
+
+        closeAddSubjectModal.addEventListener('click', () => {
+            addSubjectModal.classList.add('hidden');
+        });
+
+        cancelAddSubject.addEventListener('click', () => {
+            addSubjectModal.classList.add('hidden');
+        });
+
+        addSubjectForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const subjectName = document.getElementById('subject-name').value;
+            
+            // Добавить новый предмет с пустым массивом оценок
+            grades.push({
+                name: subjectName,
+                grades: []
+            });
+            
+            localStorage.setItem('grades', JSON.stringify(grades));
+            addSubjectForm.reset();
+            addSubjectModal.classList.add('hidden');
+            
+            // Открыть модальное окно добавления оценки для этого предмета
+            openAddGradeModal(grades.length - 1);
+        });
+
+        // Модальные обработчики оценок
+        closeAddGradeModal.addEventListener('click', () => {
+            addGradeModal.classList.add('hidden');
+        });
+
+        cancelAddGrade.addEventListener('click', () => {
+            addGradeModal.classList.add('hidden');
+        });
+
+        addGradeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const subjectId = parseInt(document.getElementById('grade-subject-id').value);
+            const value = document.getElementById('grade-value').value;
+            const date = document.getElementById('grade-date').value;
+            
+            // Format date as DD.MM.YYYY
+            const dateObj = new Date(date);
+            const formattedDate = `${dateObj.getDate().toString().padStart(2, '0')}.${(dateObj.getMonth() + 1).toString().padStart(2, '0')}.${dateObj.getFullYear()}`;
+            
+            grades[subjectId].grades.push({
+                value: value,
+                date: formattedDate
+            });
+            
+            localStorage.setItem('grades', JSON.stringify(grades));
+            addGradeForm.reset();
+            addGradeModal.classList.add('hidden');
+            loadGrades();
+        });
+
+        // Просмотреть все оценки
+        viewAllGrades.addEventListener('click', (e) => {
+            e.preventDefault();
+            showAllGradesModal();
+        });
+
+        // Инициализировать напоминания при загрузке страницы
+        document.addEventListener('DOMContentLoaded', loadReminders);
+
+        const allGradesModal = document.getElementById('all-grades-modal');
+        const closeAllGradesModal = document.getElementById('close-all-grades-modal');
+        const allGradesBody = document.getElementById('all-grades-body');
+        const overallAverageElement = document.getElementById('overall-average');
+        const addNewSubjectFromModal = document.getElementById('add-new-subject-from-modal');
+
+        // Show all grades modal when clicking grades link
+        document.getElementById('grades-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            showAllGradesModal();
+            
+            // Закрыть мобильное меню, если открыто
+            if (window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+            }
+        });
+
+        closeAllGradesModal.addEventListener('click', () => {
+            allGradesModal.classList.add('hidden');
+        });
+
+        addNewSubjectFromModal.addEventListener('click', () => {
+            allGradesModal.classList.add('hidden');
+            addSubjectModal.classList.remove('hidden');
+        });
+
+        function showAllGradesModal() {
+            allGradesBody.innerHTML = '';
+            
+            if (grades.length === 0) {
+                allGradesBody.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="py-4 text-center text-gray-500">Нет данных об оценках</td>
+                    </tr>
+                `;
+                overallAverageElement.textContent = '0';
+                allGradesModal.classList.remove('hidden');
+                return;
+            }
+
+            let totalSum = 0;
+            let totalCount = 0;
+
+            grades.forEach(subject => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-200 hover:bg-gray-50';
+                
+                let subjectSum = 0;
+                let subjectCount = 0;
+                let gradesList = '';
+                
+                subject.grades.forEach(grade => {
+                    const gradeClass = getGradeClass(grade.value);
+                    gradesList += `<span class="${gradeClass} text-white px-2 py-1 rounded text-sm mr-1">${grade.value}</span>`;
+                    subjectSum += parseInt(grade.value);
+                    subjectCount++;
+                });
+                
+                const subjectAverage = subjectCount > 0 ? (subjectSum / subjectCount).toFixed(2) : 0;
+                totalSum += subjectSum;
+                totalCount += subjectCount;
+                
+                row.innerHTML = `
+                    <td class="py-3 px-4 font-medium">${subject.name}</td>
+                    <td class="py-3 px-4">${gradesList || '-'}</td>
+                    <td class="py-3 px-4">${subjectAverage}</td>
+                `;
+                allGradesBody.appendChild(row);
+            });
+
+            const overallAverage = totalCount > 0 ? (totalSum / totalCount).toFixed(2) : 0;
+            overallAverageElement.textContent = overallAverage;
+            
+            allGradesModal.classList.remove('hidden');
+        }
+
+        // Также загружать оценки при загрузке страницы, если URL содержит хэш #grades
+        window.addEventListener('load', () => {
+            if (window.location.hash === '#grades') {
+                loadGrades();
+                const gradesSection = document.getElementById('grades-section');
+                if (gradesSection) {
+                    gradesSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+
+        // Инициализировать напоминания при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            loadReminders();
+        });
+
+        // Закрывать модальное окно при щелчке за его пределами
+        window.addEventListener('click', (e) => {
+            if (e.target === allRemindersModal) {
+                allRemindersModal.classList.add('hidden');
+            }
+            if (e.target === scheduleModal) {
+                scheduleModal.classList.add('hidden');
+            }
+            if (e.target === addReminderModal) {
+                addReminderModal.classList.add('hidden');
+            }
+        });
+
+        // Мобильное меню
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const sidebar = document.getElementById('sidebar');
+
+        mobileMenuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('translate-x-0');
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        // Закрытие меню при клике вне его области
+        document.addEventListener('click', (event) => {
+            if (!sidebar.contains(event.target) && 
+                event.target !== mobileMenuButton && 
+                !event.target.closest('#mobile-menu-button')) {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+            }
+        });
+
+        // Закрывать боковую панель при нажатии на ссылку (для мобильных устройств)
+        document.querySelectorAll('#sidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.add('-translate-x-full');
+                    sidebar.classList.remove('translate-x-0');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
